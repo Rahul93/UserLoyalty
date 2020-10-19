@@ -9,6 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>11</java.version>
+	</properties>
+
 	<groupId>com.acko</groupId>
 	<artifactId>acko</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -16,10 +21,6 @@
 	<description>Spring Boot Template Project</description>
 
 	<packaging>pom</packaging>
-
-	<properties>
-		<java.version>11</java.version>
-	</properties>
 
 	<modules>
 		<module>template</module>
