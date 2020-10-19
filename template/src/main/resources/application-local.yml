@@ -1,0 +1,7 @@
+environment: local
+
+spring:
+    application:
+        name: FinAckoEnrichment
+    profiles:
+        active: local
