@@ -14,10 +14,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>template</name>
 	<description>Spring Boot Template Project</description>
-
-	<properties>
-		<java.version>11</java.version>
-	</properties>
+	<packaging>pom</packaging>
 
 	<dependencies>
 		<dependency>
