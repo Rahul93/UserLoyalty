@@ -4,7 +4,7 @@
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout
-        pattern="%highlight{[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - [request_id=$${ctx:request_id}] [event_type=%X{event_type}] [event_subtype=$${ctx:event_subtype}] [message=%msg] [thread_id=%tid]}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=GREEN, DEBUG=green bold, TRACE=blue} %n"
+        pattern="%highlight{[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{2} - [message=%msg] [thread_id=%tid]}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=GREEN, DEBUG=green bold, TRACE=blue} %n"
       />
     </Console>
   </Appenders>
@@ -17,3 +17,4 @@
   </Loggers>
 
 </Configuration>
+        <!--        pattern="%highlight{[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - [request_id=$${ctx:request_id}] [event_type=%X{event_type}] [event_subtype=$${ctx:event_subtype}] [message=%msg] [thread_id=%tid]}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=GREEN, DEBUG=green bold, TRACE=blue} %n"-->
