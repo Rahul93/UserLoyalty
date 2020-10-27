@@ -2,7 +2,7 @@ environment: local
 
 spring:
     application:
-        name: FinAckoEnrichment
+        name: Template
     profiles:
         active: local
     datasource:
