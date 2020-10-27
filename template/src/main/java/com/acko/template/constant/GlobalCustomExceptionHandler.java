@@ -22,6 +22,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
+import java.sql.SQLException;
 import java.util.Objects;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -217,6 +218,24 @@ public class GlobalCustomExceptionHandler extends ResponseEntityExceptionHandler
         apiError.getError().setDebugMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }
+
+    /**
+     * Handle SQL Exception
+     *
+     * @param ex
+     * @param request
+     * @return
+     */
+    @ExceptionHandler({SQLException.class})
+    public ResponseEntity<Object> handleSqlException(SQLException ex, WebRequest request) {
+        ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause());
+        error.getError().setMessage(ex.getMessage());
+        error.getError().setDebugMessage(ex.getLocalizedMessage());
+        error.addError(ex.getSQLState(), String.valueOf(ex.getErrorCode()), ex.fillInStackTrace(),
+            "SQLException");
+        return buildResponseEntity(error);
+    }
+
 
     private ResponseEntity<Object> buildResponseEntity(ApiError error) {
         return new ResponseEntity<>(error, error.getStatus());
