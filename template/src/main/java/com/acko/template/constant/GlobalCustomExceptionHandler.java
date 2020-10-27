@@ -23,7 +23,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.ConstraintViolationException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -236,6 +238,26 @@ public class GlobalCustomExceptionHandler extends ResponseEntityExceptionHandler
         return buildResponseEntity(error);
     }
 
+    /**
+     * Handle all remaining exception
+     *
+     * @param ex
+     * @param request
+     * @return
+     */
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
+        ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
+        String str = Arrays.stream(ex.getStackTrace())
+            .map(obj -> {
+                    error.addError(
+                        obj.getClassName(), obj.getFileName(), obj.getMethodName(), obj.toString());
+                    return obj.toString();
+                }
+            ).collect(Collectors.joining("\n"));
+        logger.error(str);
+        return buildResponseEntity(error);
+    }
 
     private ResponseEntity<Object> buildResponseEntity(ApiError error) {
         return new ResponseEntity<>(error, error.getStatus());
