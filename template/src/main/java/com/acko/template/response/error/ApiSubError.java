@@ -1,4 +1,4 @@
-package com.finacko.enrichment.response.error;
+package com.acko.template.response.error;
 
 public abstract class ApiSubError {
 
