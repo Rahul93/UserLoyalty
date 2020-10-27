@@ -22,4 +22,12 @@ public class TemplateController {
         return ResponseEntity.ok(new HashMap<>());
     }
 
+    @PostMapping(
+        value = Constants.EVENT_PUSH,
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<HashMap<String, String>> post() {
+        return ResponseEntity.ok(new HashMap<>());
+    }
 }
