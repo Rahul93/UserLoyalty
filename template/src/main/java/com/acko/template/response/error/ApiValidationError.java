@@ -1,4 +1,4 @@
-package com.finacko.enrichment.response.error;
+package com.acko.template.response.error;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
