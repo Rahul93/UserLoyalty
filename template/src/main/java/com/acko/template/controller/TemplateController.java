@@ -1,6 +1,7 @@
 package com.acko.template.controller;
 
 import com.acko.template.constant.Constants;
+import com.acko.template.response.success.ApiSuccess;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,8 @@ public class TemplateController {
         value = Constants.EVENT_GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<HashMap<String, String>> get() {
-        return ResponseEntity.ok(new HashMap<>());
+    public ResponseEntity<ApiSuccess<Object>> get() {
+        return ApiSuccess.ok(new HashMap<>());
     }
 
     @PostMapping(
@@ -27,7 +28,7 @@ public class TemplateController {
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<HashMap<String, String>> post() {
-        return ResponseEntity.ok(new HashMap<>());
+    public ResponseEntity<ApiSuccess<Object>> post() {
+        return ApiSuccess.ok(new HashMap<>());
     }
 }
