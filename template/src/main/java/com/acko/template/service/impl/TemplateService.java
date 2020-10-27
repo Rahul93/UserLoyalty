@@ -1,6 +1,6 @@
-package com.acko.template.constant.service.impl;
+package com.acko.template.service.impl;
 
-import com.acko.template.constant.service.ITemplateService;
+import com.acko.template.service.ITemplateService;
 import org.springframework.stereotype.Service;
 
 @Service
