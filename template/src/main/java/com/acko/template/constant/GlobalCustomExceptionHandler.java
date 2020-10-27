@@ -3,17 +3,26 @@ package com.acko.template.constant;
 import com.acko.template.response.error.ApiError;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.validation.ConstraintViolationException;
+import java.util.Objects;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -98,10 +107,115 @@ public class GlobalCustomExceptionHandler extends ResponseEntityExceptionHandler
         HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status,
         WebRequest request) {
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-//        log.info("{} to {}", servletWebRequest.getHttpMethod(),
-//            servletWebRequest.getRequest().getServletPath());
+        // logger.info("{} to {}", servletWebRequest.getHttpMethod(),
+        //    servletWebRequest.getRequest().getServletPath());
         String error = "Malformed JSON request";
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error, ex));
+    }
+
+    /**
+     * @param ex      HttpMessageNotWritableException, Happens when writing output
+     * @param headers
+     * @param status
+     * @param request
+     * @return
+     */
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotWritable(
+        HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status,
+        WebRequest request) {
+        String error = "Error writing JSON output";
+        return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, error, ex));
+    }
+
+    /**
+     * @param ex      Handle NoHandlerFoundException
+     * @param headers
+     * @param status
+     * @param request
+     * @return
+     */
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(
+        NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+        apiError.getError().setMessage(String
+            .format("Could not find the %s method for URL %s", ex.getHttpMethod(),
+                ex.getRequestURL()));
+        apiError.getError().setDebugMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    /**
+     * @param ex      Handle HttpRequestMethodNotSupportedException
+     * @param headers
+     * @param status
+     * @param request
+     * @return
+     */
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+        final HttpRequestMethodNotSupportedException ex,
+        final HttpHeaders headers,
+        final HttpStatus status,
+        final WebRequest request) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(ex.getMethod());
+        builder.append(" method is not supported for this request. Supported methods are ");
+        Objects.requireNonNull(ex.getSupportedHttpMethods()).forEach(t -> builder.append(t)
+            .append(" "));
+
+        final ApiError apiError = new ApiError(
+            HttpStatus.METHOD_NOT_ALLOWED, builder.toString(), ex);
+        return buildResponseEntity(apiError);
+    }
+
+    /**
+     * Handle javax.persistence.EntityNotFoundException.class
+     *
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(javax.persistence.EntityNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(javax.persistence.EntityNotFoundException ex) {
+        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, ex));
+    }
+
+
+    /**
+     * Handle DataIntegrityViolationException, inspects the cause for different DB causes.
+     *
+     * @param ex
+     * @param request
+     * @return
+     */
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
+        if (ex.getCause() instanceof ConstraintViolationException) {
+            return buildResponseEntity(
+                new ApiError(HttpStatus.CONFLICT, "Database error", ex.getCause()));
+        }
+        return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex));
+    }
+
+    /**
+     * Handle MethodArgumentTypeMismatchException
+     *
+     * @param ex
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(
+        MethodArgumentTypeMismatchException ex, WebRequest request) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.getError().setMessage(String
+            .format("The parameter '%s' of value '%s' could not be converted to type '%s'",
+                ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
+        apiError.getError().setDebugMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
     }
 
     private ResponseEntity<Object> buildResponseEntity(ApiError error) {
