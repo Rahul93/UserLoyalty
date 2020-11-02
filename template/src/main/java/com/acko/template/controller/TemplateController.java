@@ -2,12 +2,11 @@ package com.acko.template.controller;
 
 import com.acko.template.constant.Constants;
 import com.acko.template.response.success.ApiSuccess;
+import io.micrometer.core.lang.NonNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -19,7 +18,7 @@ public class TemplateController {
         value = Constants.EVENT_GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ApiSuccess<Object>> get() {
+    public ResponseEntity<ApiSuccess<Object>> get(@RequestParam Integer a) {
         return ApiSuccess.ok(new HashMap<>());
     }
 
@@ -28,7 +27,7 @@ public class TemplateController {
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ApiSuccess<Object>> post() {
-        return ApiSuccess.ok(new HashMap<>());
+    public ResponseEntity<ApiSuccess<Object>> post(@RequestBody @NonNull HashMap<String, String> hm) {
+        return ApiSuccess.ok(hm);
     }
 }

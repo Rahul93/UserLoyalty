@@ -1,4 +1,4 @@
-package com.acko.template.constant;
+package com.acko.template.controller;
 
 import com.acko.template.response.error.ApiError;
 import org.springframework.core.Ordered;
