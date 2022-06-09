@@ -7,8 +7,6 @@ spring:
         active: local
     datasource:
         jdbc-url: jdbc:postgresql://127.0.0.1/acko_template
-        username: root
-        password: root
         platform: postgres
         dirver-class-name: org.postgresql.Driver
         minimumIdle: 2
