@@ -1,10 +1,10 @@
 package com.acko.template.controller;
 
-import com.acko.template.constant.Constants;
+import com.acko.template.constant.Url;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = Constants.API_V1)
+@RequestMapping(value = Url.API_V1)
 public class TemplateController {
 
 }
