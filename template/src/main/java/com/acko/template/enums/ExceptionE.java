@@ -3,7 +3,6 @@ package com.acko.template.enums;
 import com.acko.template.interfaceI.IException;
 import com.acko.template.utils.Util;
 import lombok.Getter;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import com.google.common.base.Enums;
 
 @Getter
