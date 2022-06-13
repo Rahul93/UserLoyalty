@@ -28,7 +28,9 @@ public enum ErrorCode {
       final ErrorCode errorCode, final String errorMessage, boolean useErrorMessage) {
 
     ErrorObject errorObject = ErrorCode.getErrorObject(errorCode);
-    // Using error message in case of internal api requests
+
+    /* If we want to print customise error message, we can set the message here
+    otherwise it will print generic exception message */
     if (useErrorMessage) {
       errorObject.setMessage(errorMessage);
     }
