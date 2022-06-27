@@ -3,10 +3,8 @@ environment: prod
 spring:
   application:
     name: Template
-  profiles:
-    active: prod
   datasource:
-    jdbc-url: jdbc:postgresql://127.0.0.1/acko_template
+    jdbc-url: jdbc:postgresql://127.0.0.1:5432/acko_template
     platform: postgres
     driver-class-name: org.postgresql.Driver
     minimumIdle: 5
