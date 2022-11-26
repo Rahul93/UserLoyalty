@@ -6,7 +6,7 @@ spring:
     datasource:
         jdbc-url: jdbc:postgresql://127.0.0.1:5432/acko_template
         platform: postgres
-        dirver-class-name: org.postgresql.Driver
+        driver-class-name: org.postgresql.Driver
         minimumIdle: 2
         maximumPoolSize: 5
         poolName: TemplateHikariCP
